@@ -1,0 +1,6 @@
+It's time expensive to run Stanford Parser so processing TOTAL = 50 docs may cost more than 20 mins. 
+Set TOTAL to a small number to try and debug
+
+I ran into multiple environment issues regarding Standford Parser so it might be non-trivial for you to run this program.
+
+Three large file is shared through Google Drive https://drive.google.com/drive/folders/1xiVpPxypBHeCqcGNJr21XAYEp-5XrB_W?usp=sharing
