@@ -3,6 +3,7 @@ from nltk.tokenize import word_tokenize,sent_tokenize
 from nltk.tag import pos_tag
 from nltk.corpus import stopwords
 import os
+import sys
 from collections import Counter
 import math
 import en_core_web_sm
@@ -31,7 +32,10 @@ def computeTFIDF(none_len, freq_dict):
         scores.append(c)
     return scores
 
-train = ['set1','set2','set3','set4','set5']
+# train = ['set1','set2','set3','set4','set5']
+train = []
+train.append( sys.argv[1])
+n_questions = sys.argv[2]
 #----------------------------------------read docs----------------------------------------------------------------
 # list of 50 articles,each is a dict whose key is the title and value is a list of sentences splited from the whole body
 articles=[]
@@ -52,12 +56,15 @@ for directory in train:
             d[title] = sent_tokenize(s)
             articles.append(d)
 
+
 #----------------------------------------parse tree----------------------------------------------------------------
 # parse tree : select NP-VP structured sentence
 candidateSent = []
 parser = stanford.StanfordParser(model_path="C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/englishPCFG.ser.gz",encoding='utf8')
 # sentences = parser.raw_parse_sents(('Hello,My name is completely Melro.','Are you ok?'))
+
 TOTAL = 50 #try small number <50 to debug
+# for article in articles[:TOTAL]:
 for article in articles[:TOTAL]:
     candidate = []
     for v in article.values():
