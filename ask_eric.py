@@ -9,13 +9,15 @@ import math
 import en_core_web_sm
 
 # from sklearn.feature_extraction.text import TfidfVectorizer
-from nltk.parse import stanford
+# from nltk.parse import stanford
+import benepar
 
-os.environ['STANFORD_PARSER'] = 'C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/stanford-parser.jar'
-os.environ['STANFORD_MODELS'] = 'C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/stanford-parser-3.9.2-models.jar'
-java_path = "D:/Java/bin/java.exe"
-os.environ['JAVA_HOME'] = java_path
-nltk.internals.config_java(java_path)
+
+# os.environ['STANFORD_PARSER'] = 'C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/stanford-parser.jar'
+# os.environ['STANFORD_MODELS'] = 'C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/stanford-parser-3.9.2-models.jar'
+# java_path = "D:/Java/bin/java.exe"
+# os.environ['JAVA_HOME'] = java_path
+# nltk.internals.config_java(java_path)
 # nltk.download("punkt")
 
 def computeTFIDF(none_len, freq_dict):
@@ -33,51 +35,42 @@ def computeTFIDF(none_len, freq_dict):
     return scores
 
 # train = ['set1','set2','set3','set4','set5']
-train = []
-train.append( sys.argv[1])
-n_questions = sys.argv[2]
+train = sys.argv[1]
+n_questions = int(sys.argv[2])
 #----------------------------------------read docs----------------------------------------------------------------
-# list of 50 articles,each is a dict whose key is the title and value is a list of sentences splited from the whole body
-articles=[]
-for directory in train:
-    for f in os.listdir(directory):
-        if f.endswith(".txt"):
-            d = dict()
-            s = ""
-            with open(directory+"/"+f,encoding='utf-8',mode = 'r') as _f:
-                for i, line in enumerate(_f):
-                    if i == 0:
-                        title = line.strip().lower()
-                    # delete content after "see also"
-                    elif line.strip().lower() in set(["see also",'references']):
-                        break
-                    else:
-                        s += line.strip().lower()
-            d[title] = sent_tokenize(s)
-            articles.append(d)
+# d is dict where key is the title and value is a list of sentence
+d = dict()
+s = ""
+with open(train,encoding='utf-8',mode = 'r') as _f:
+    for i, line in enumerate(_f):
+        if i == 0:
+            title = line.strip().lower()
+        # delete content after "see also"
+        elif line.strip().lower() in set(["see also",'references']):
+            break
+        else:
+            s += line.strip().lower()
+d[title] = sent_tokenize(s)
 
 
 #----------------------------------------parse tree----------------------------------------------------------------
 # parse tree : select NP-VP structured sentence
-candidateSent = []
-parser = stanford.StanfordParser(model_path="C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/englishPCFG.ser.gz",encoding='utf8')
+candidate = []
+# parser = stanford.StanfordParser(model_path="C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/englishPCFG.ser.gz",encoding='utf8')
+parser = benepar.Parser("benepar_en2")
 # sentences = parser.raw_parse_sents(('Hello,My name is completely Melro.','Are you ok?'))
 
-TOTAL = 50 #try small number <50 to debug
-# for article in articles[:TOTAL]:
-for article in articles[:TOTAL]:
-    candidate = []
-    for v in article.values():
-        sentences = parser.raw_parse_sents(v)
-        for line in sentences:
-            for sentence in line:
-                if sentence[0].label()=="S": # start 
-                    subtree = sentence[0]
-                    for i in range(len(subtree) - 1):
-                        if subtree[i].label() == "NP" and subtree[i+1].label() == "VP":
-                            candidate.append(sentence) #save this NP-VP sentence as a tree structure
-                            break
-    candidateSent.append(candidate)
+for v in d.values():
+    # sentences = parser.raw_parse_sents(v)
+    sentences = parser.parse_sents(v)
+    for line in sentences:
+        for sentence in line:
+            if sentence[0].label()=="S": # start 
+                subtree = sentence[0]
+                for i in range(len(subtree) - 1):
+                    if subtree[i].label() == "NP" and subtree[i+1].label() == "VP":
+                        candidate.append(sentence) #save this NP-VP sentence as a tree structure
+                        break
 
 
 #----------------------------------------TF-IDF----------------------------------------------------------------
@@ -88,14 +81,13 @@ freq_dict = []
 # number of none tokens for each doc
 none_len = []
 
-for doc in candidateSent:
-    t = []
-    for sent in doc: #sent is a tree  
-        for word, tag in sent.pos(): # POS
-            if tag in Nones:
-                t.append(word)
-    none_len.append(len(t))
-    freq_dict.append(Counter(t))
+t = []
+for sent in candidate: #sent is a tree  
+    for word, tag in sent.pos(): # POS
+        if tag in Nones:
+            t.append(word)
+none_len = len(t)
+freq_dict = Counter(t)
 
 
 # a list of dicts, each dict is a word:tf_idf weight
