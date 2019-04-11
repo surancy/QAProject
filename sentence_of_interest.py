@@ -46,9 +46,14 @@ def computeTFIDF(none_len, freq_dict, data):
     return c
 
 def find_sentences_of_interest(train):
+
     """
+    train: the file name from sys.argv[1]
+    
+
     Return: a list of sentence of interest, where each element is of structure:
     (sentence Tree(is a nltk.tree.tree), dict{NER:tag}, heuristic socre)
+
     for example: first element of the returned list acquired from set1/a1.txt is
         (Tree('S', [Tree('NP', [Tree('DT', ['the']), Tree('NNP', ['old']), 
         Tree('NNP', ['kingdom'])]), Tree('VP', [Tree('VBZ', ['is']), 
@@ -82,8 +87,6 @@ def find_sentences_of_interest(train):
         str = " ".join(sent.leaves()) 
         should give you the whole sentence, where "sent" is the tree structure shown above
     """
-# train = sys.argv[1]
-# n_questions = int(sys.argv[2])
 #----------------------------------------read docs----------------------------------------------------------------
 # d is dict where key is the title and value is a list of sentence
     d = dict()
@@ -121,10 +124,7 @@ def find_sentences_of_interest(train):
     #----------------------------------------TF-IDF----------------------------------------------------------------
     Nones = set(["NN","NNS","NNP","NNPS"])
     #extract None
-    #  a list of freq dict for each doc
     freq_dict = []
-    # number of none tokens for each doc
-    none_len = []   
 
     t = []
     for sent in candidate: #sent is a tree  
@@ -139,7 +139,8 @@ def find_sentences_of_interest(train):
     # return a tf_idf dict, word:score
     # pdb.set_trace()
     tf_idf = computeTFIDF(none_len, freq_dict, dev_data)
-    scores = [] #socre for every sentence
+
+    scores = [] #a list of tfidf score for every sentence
     for sent in candidate: #sent is a tree  
         for word, tag in sent.pos(): # POS
             score = 0
@@ -149,7 +150,6 @@ def find_sentences_of_interest(train):
         
 
     #----------------------------------------NER tag----------------------------------------------------------------
-    # this is all the NER tags, delete unnecessary ones to looking for only what we need
     # NER = set(["PERSON","NORP","FAC","ORG","GPE","LOC","PRODUCT","EVENT",\
     #     "WORK_OF_ART","LAW","LANGUAGE","DATE","TIME","PERCENT","MONEY","QUANTITY","ORDINAL","CARDINAL"])
     #compute NER for all candidate sentences
@@ -158,6 +158,7 @@ def find_sentences_of_interest(train):
     # pdb.set_trace()
     # heuristic weight for tf-idf and NER
     alpha, beta = 1, 1
+
     candidate2 = []
     nlp = en_core_web_sm.load()
     for i, sent in enumerate(candidate):
