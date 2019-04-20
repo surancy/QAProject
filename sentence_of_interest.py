@@ -1,4 +1,5 @@
 import nltk
+import numpy as np
 from nltk.tokenize import word_tokenize,sent_tokenize
 from nltk.tag import pos_tag
 from nltk.corpus import stopwords
@@ -6,11 +7,12 @@ import os
 import sys
 from collections import Counter
 import math
-import en_core_web_sm
+# import en_core_web_sm
 # import pdb
 # from nltk.parse import stanford
 import benepar
-
+import spacy
+import json
 
 # os.environ['STANFORD_PARSER'] = 'C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/stanford-parser.jar'
 # os.environ['STANFORD_MODELS'] = 'C:/Users/geyiyang/OneDrive/CMU/2019 Spring/NLP/team project/QAProject/stanford-parser-3.9.2-models.jar'
@@ -124,31 +126,34 @@ def find_sentences_of_interest(train):
     #----------------------------------------TF-IDF----------------------------------------------------------------
     Nones = set(["NN","NNS","NNP","NNPS"])
     #extract None
-    freq_dict = []
+    # freq_dict = []
 
-    t = []
-    for sent in candidate: #sent is a tree  
-        for word, tag in sent.pos(): # POS
-            if tag in Nones:
-                t.append(word)
-    none_len = len(t)
-    freq_dict = Counter(t)
+    # t = []
+    # for sent in candidate: #sent is a tree  
+    #     for word, tag in sent.pos(): # POS
+    #         if tag in Nones:
+    #             t.append(word)
+    # none_len = len(t)
+    # freq_dict = Counter(t)
 
 
-    dev_data = ['set1','set2','set3','set4','set5']
+    # dev_data = ['set1','set2','set3','set4','set5']
     # return a tf_idf dict, word:score
     # pdb.set_trace()
-    tf_idf = computeTFIDF(none_len, freq_dict, dev_data)
-
+    # tf_idf = computeTFIDF(none_len, freq_dict, dev_data)
+    
+    # js = json.dumps(tf_idf)
+    # with open("tfidf.json",'w') as f:
+        # f.write(js)
+    with open("tfidf.json") as f:
+        tf_idf = json.load(f)
     scores = [] #a list of tfidf score for every sentence
     for sent in candidate: #sent is a tree  
+        score = 0
         for word, tag in sent.pos(): # POS
-            score = 0
             if tag in Nones:
                 score += tf_idf[word]
         scores.append(score)
-        
-
     #----------------------------------------NER tag----------------------------------------------------------------
     # NER = set(["PERSON","NORP","FAC","ORG","GPE","LOC","PRODUCT","EVENT",\
     #     "WORK_OF_ART","LAW","LANGUAGE","DATE","TIME","PERCENT","MONEY","QUANTITY","ORDINAL","CARDINAL"])
@@ -160,9 +165,9 @@ def find_sentences_of_interest(train):
     alpha, beta = 1, 1
 
     candidate2 = []
-    nlp = en_core_web_sm.load()
+    selected = []
+    nlp = spacy.load("en_core_web_sm")
     for i, sent in enumerate(candidate):
-        temp = []
         str = " ".join(sent.leaves())
         x = nlp(str)
         # pprint([(X.text, X.label_) for X in x.ents])
@@ -170,9 +175,18 @@ def find_sentences_of_interest(train):
             label = X.label_
             if label in NER:# contains NER tag that we want
                 #each sentence is store as a triplet (sent tree, NER tag dict, score)
-                temp.append((sent, dict([(X.text, X.label_) for X in x.ents]), alpha*scores[i] + beta*len(x.ents)))
+                candidate2.append([sent, dict([(X.text, X.label_) for X in x.ents]),len(x.ents)])
+                selected.append(i)
                 break
-        candidate2.append(temp)
-    
+    ner_socres = np.array([c[2] for c in candidate2])
+    ner_socres = np.exp(ner_socres)/sum(np.exp(ner_socres))
+    tfidf_scores = [scores[i] for i in selected ]
+    tfidf_scores = np.exp(tfidf_scores)/sum(np.exp(tfidf_scores))
+    for i in range(len(candidate2)):
+        candidate2[i][2] = alpha * ner_socres[i] + beta * tfidf_scores[i]
+    candidate2.sort(key=lambda x:x[2])
+
     return candidate2
 
+if __name__ == "__main__":
+    find_sentences_of_interest("set1/a1.txt")
