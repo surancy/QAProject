@@ -49,7 +49,7 @@ class genQuestions():
                 subjString = " ".join([x for x in [tokenLeft, token.text, tokenRight] if not x is ""])
                 flag = 0
             else:
-                if token.text == "is":
+                if sum(token.text == x for x in ["is", "was"]):
                     return subjString
                 else:
                     phrase = " "+token.text+" " 

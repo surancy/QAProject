@@ -157,7 +157,7 @@ def find_sentences_of_interest(train):
 
     # pdb.set_trace()
     # heuristic weight for tf-idf and NER
-    alpha, beta = 1, 1
+    alpha, beta = 2, 1
 
     candidate2 = []
     nlp = en_core_web_sm.load()
