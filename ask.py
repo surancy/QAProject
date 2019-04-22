@@ -6,6 +6,7 @@ nlp = spacy.load("en_core_web_sm")
 import random
 import nltk
 import sys
+from textblob import TextBlob
 parser = benepar.Parser("benepar_en2")
 
 def overlap(a, b):
@@ -39,6 +40,22 @@ class genQuestions():
             distances.append([nounPhrase, Levenshtein.distance(nounPhrase, phrase)])
         return list(sorted(distances, key= lambda x:x[1]))[0][0]
     
+    def refineQuestion(self, question):
+        refined =""
+        doc = self.nlp(question)
+        ent_flag =0
+        for token in doc:
+            if not ent_flag:
+                refined+= " "+token.text
+                if token.ent_type_ in self.ent_map:
+                    ent_flag=1
+            else:
+                if token.ent_type_ in self.ent_map:    
+                    refined+= " "+token.text
+                else:
+                    break
+        return refined
+
     def subjQuestion(self, doc):
         subjString = ""
         flag = 1
@@ -79,14 +96,18 @@ class genQuestions():
             if word.text in phrase and word.ent_type_ in self.ent_map:
                 substring = self.ent_map[word.ent_type_]
                 break
-        question = re.sub(phrase, substring+" ", sentence)
+        question = re.sub(phrase, substring+" ", sentence,1)
         if substring in question:
             shift =  question.index(substring)
             if shift != 0:
                 question = question[shift:]
         question = re.sub(r'\s{2,}', ' ',question)
         question = self.checkAKA(question)
-        question = question[:-1] + "?"
+        question = self.refineQuestion(question)
+        if(question[-1]=="."):
+            question = question[:-1] + "?"
+        else:
+            question +="?"        
         return question 
 
 
@@ -110,19 +131,27 @@ class genQuestions():
 if __name__ == "__main__":
     num_questions = int(sys.argv[2])
     input_file = sys.argv[1]
-    questions = [None]*(num_questions)
+    #questions = [None]*(num_questions)
+    questions=[]
     q_count =0
     with open(input_file, "r") as file: 
         data = file.readlines()
+    data_=[]
+    for line in data:
+       blob= TextBlob(line)
+       for sent in blob.sentences:
+           data_.append(str(sent))
+    data = data_
     ask = genQuestions( "medium", num_questions)
     lines_of_interest = ask.find_NER_SENT(data)
     for sentence in lines_of_interest:
         q_ = ask.gen(sentence)
         if q_ is not None:
-            questions[q_count] = ask.gen(sentence)
+            #questions[q_count] = ask.gen(sentence)
+            questions.append([sentence, ask.gen(sentence)])
             q_count +=1
-        if q_count == num_questions:
-            break
-    for q in questions:
-        print(q)
+        #if q_count == num_questions:
+        #    break
+    for (a,q) in questions:
+        print("Context: {}\n Q:{}\n\n".format(a,q))
         print("\n")
