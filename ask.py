@@ -25,7 +25,7 @@ class genQuestions():
             print("Invalid model size.")
         self.ent_map = {"PERSON": "Who", "ORG": "Who", "DATE": "When", "GPE":"What"}
         self.num_questions = num_questions
-        self.not_allowed_after_wh = [",", "in"] + list(self.ent_map.values())\
+        self.not_allowed_after_wh = ["{","[","(","\"",";",":",",", "in"] + list(self.ent_map.values())\
                             + list([x.lower() for x in self.ent_map.values()])
         
     def form_question(self, phrase, sentence):
@@ -129,7 +129,19 @@ class genQuestions():
         
         return True
     
+    def genYesNo(self, sentence):
+        modifier = random.choice(["true", "false"])
+        sentence_ = sentence[0].lower() + sentence[1:]
+        if modifier=="true":
+            return "Is it "+modifier+" that "+ sentence_
+        else:
+            if "is" in sentence_:
+                return "Is it true that "+ sentence_[:sentence_.index("is")+2] + " not" + sentence_[sentence_.index("is")+2:]
+            else:
+                return "Is it "+modifier+" that "+ sentence_
+
     def gen(self, sentence):
+        qtype = "WH"
         sentence = self.preprocess(sentence)
         doc = self.nlp(sentence)
         phrase = self.subjQuestion(doc)
@@ -154,14 +166,15 @@ class genQuestions():
         question = self.processComma(question, substring, pos)
         if not question:
             return None
+        if(not self.check_Q_grammar(question, substring)):
+            question = self.genYesNo(sentence)
+            qtype = "YN"
         if(question[-1]=="."):
             question = question[:-1] + "?"
         else:
             question +="?"
         question = re.sub(r'\s{1,}(\?)', r'\1',question)
-        if(self.check_Q_grammar(question, substring)):
-            return question
-        return  "NOT A VALID QUESTION: "+question
+        return qtype,question
 
 
     def hasNER(self,sentence):
@@ -180,7 +193,8 @@ class genQuestions():
                         result.append(sent.text)
         random.shuffle(result)
         return result
-        
+
+
 if __name__ == "__main__":
     num_questions = int(sys.argv[2])
     input_file = sys.argv[1]
@@ -198,10 +212,13 @@ if __name__ == "__main__":
     ask = genQuestions( "medium", num_questions)
     lines_of_interest = ask.find_NER_SENT(data)
     for sentence in lines_of_interest:
-        q_ = ask.gen(sentence)
+        try:
+            q_ = ask.gen(sentence)
+        except:
+            print("error in sentence: ", sentence)
         if q_ is not None:
             #questions[q_count] = ask.gen(sentence)
-            questions.append([sentence, ask.gen(sentence)])
+            questions.append([sentence, q_])
             q_count +=1
         #if q_count == num_questions:
         #    break
