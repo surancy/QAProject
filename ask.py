@@ -10,6 +10,7 @@ from textblob import TextBlob
 parser = benepar.Parser("benepar_en2")
 
 
+
 def overlap(a, b):
     return max(i for i in range(len(b)+1) if a.endswith(b[:i]))
 
@@ -135,8 +136,8 @@ class genQuestions():
         if modifier=="true":
             return "Is it "+modifier+" that "+ sentence_
         else:
-            if "is" in sentence_:
-                return "Is it true that "+ sentence_[:sentence_.index("is")+2] + " not" + sentence_[sentence_.index("is")+2:]
+            if "is" in sentence_:  
+                return "Is it true that "+ sentence_[:sentence_.index(" is ")+3] + " not " + sentence_[sentence_.index(" is ")+4:]
             else:
                 return "Is it "+modifier+" that "+ sentence_
 
@@ -174,6 +175,7 @@ class genQuestions():
         else:
             question +="?"
         question = re.sub(r'\s{1,}(\?)', r'\1',question)
+        question = re.sub(r'[^\w|^\d](\?)', r'\1',question)
         return qtype,question
 
 
@@ -193,7 +195,6 @@ class genQuestions():
                         result.append(sent.text)
         random.shuffle(result)
         return result
-
 
 if __name__ == "__main__":
     num_questions = int(sys.argv[2])
