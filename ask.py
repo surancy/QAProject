@@ -24,7 +24,7 @@ class genQuestions():
             self.nlp = spacy.load("en_core_web_lg")
         else:
             print("Invalid model size.")
-        self.ent_map = {"PERSON": "Who", "ORG": "Who", "DATE": "When", "GPE":"What"}
+        self.ent_map = {"PERSON": "Who", "ORG": "Who", "DATE": "What", "GPE":"What"}
         self.num_questions = num_questions
         self.not_allowed_after_wh = ["it","{","[","(","\"",";",":",",", "in"] + list(self.ent_map.values())\
                             + list([x.lower() for x in self.ent_map.values()])
