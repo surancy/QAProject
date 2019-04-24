@@ -1,4 +1,4 @@
-### Input: article, question
+### Input: article, question (list)
 
 ### Passage retrieval: find top N sentences with relavence score
 
