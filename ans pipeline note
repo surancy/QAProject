@@ -33,3 +33,13 @@ sentiment analysis from most relavent sentence
 if Q doesn't fall into any of above category (DESCRIPTION/REASON):
 
 reconstruct the candidate answer text to make it grammarly correct
+
+#### Answer types:
+find ans that has correct NER category
+
+if more than one correct NER in the candidate text:
+- text = "The Old Kingdom is perhaps best known for the large number of pyramids constructed at this time as burial places for Egypt's kings"
+- Q = "What is perhaps best known for the large number of pyramids constructed at this time as burial places for Egypt's kings?"
+{'Old Kingdom': 'GPE', 'Egypt': 'GPE'}
+**novelty rule**: ans should be the one that doesn't appear in the Q
+- ans = "Old Kingdom"
