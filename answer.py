@@ -1,4 +1,5 @@
 """
+...changing the question classification criteria
 usage: text is the text of which can be extracted answers from. Q is the question.
 Some test cases are included at the bottom.
 ====In progress===
