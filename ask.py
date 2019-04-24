@@ -240,6 +240,7 @@ if __name__ == "__main__":
     heading_candidates=[]
     article_heading = None
     end_of_headings =False
+    #heading_extraction begin
     for line in data:
         if (not end_of_headings) and len(line.split(" "))< 6 and line[-1] != ".":
             if article_heading == None:
@@ -255,6 +256,7 @@ if __name__ == "__main__":
                     end_of_headings = True
         else:
             data_.append(line)
+    #heding_extraction end
     data = data_
     print(heading_candidates)
     lines_of_interest = ask.find_NER_SENT(data)
