@@ -28,7 +28,8 @@ class genQuestions():
         self.num_questions = num_questions
         self.not_allowed_after_wh = ["it","{","[","(","\"",";",":",",", "in"] + list(self.ent_map.values())\
                             + list([x.lower() for x in self.ent_map.values()])
-        
+        self.not_allowed_headings = ["overview", "gallery", "notelist"]
+
     def form_question(self, phrase, sentence):
         phrase_list = re.findall("\w", phrase)
         sentence_list = re.findall("\w", sentence)
@@ -247,6 +248,7 @@ if __name__ == "__main__":
                 if "references" not in line.lower() and "notes" not in line.lower():
                     for h in ask.find_noun_phrases(parser.parse(line)):
                         heading_candidates.append(re.sub(r'[^\s^a-z^A-Z^0-9]', ""," ".join(h.leaves())))
+                        break
                 else:
                     end_of_headings = True
         else:
@@ -280,10 +282,10 @@ if __name__ == "__main__":
     random.shuffle(YNquestions)
     for i in range(num_yn_q):
         final_list.append(YNquestions[i][1])
-    print(random.sample(["Comment on ", "Describe ", "Discuss about "],1)[0] ,\
-                random.sample(heading_candidates[:4], 1)[0].lower(), \
-                random.sample([" in context of ", " with regards to ", " in reference to "],1)[0],\
-                (article_heading))
+    #print(random.sample(["Comment on ", "Describe ", "Discuss about "],1)[0] ,\
+    #            random.sample(heading_candidates[:4], 1)[0].lower(), \
+    #            random.sample([" in context of ", " with regards to ", " in reference to "],1)[0],\
+    #            (article_heading))
     if(num_q>10):
         hard_q = random.sample(["Comment on ", "Describe ", "Discuss about "],1)[0] +\
                 random.sample(heading_candidates[:4], 1)[0].lower()+ \
