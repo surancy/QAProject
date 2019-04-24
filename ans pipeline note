@@ -19,20 +19,16 @@ find the headword after the "what" question word
 
 - What was **reached** not at Saqqara?
 
-reconstruct the sentence based on the headword int the candidate ans text
-
-if headword is NER, then decide which question type it is
+if headword has NER, then decide which question type it is
 
 
 ##### binary Questions:
 
-if Q starts with "is", "are", "was", "were", "does", "do", "did", "have", "has", "had", "will", "would", "could": 
-sentiment analysis from most relavent sentence
+if Q starts with "is", "are", "was", "were", "does", "do", "did", "have", "has", "had", "will", "would", "could"
 
 ##### other questions:
 if Q doesn't fall into any of above category (DESCRIPTION/REASON):
 
-reconstruct the candidate answer text to make it grammarly correct
 
 #### Answer types:
 [PERSON]:
@@ -52,3 +48,9 @@ reconstruct the candidate answer text to make it grammarly correct
   {'Old Kingdom': 'GPE', 'Egypt': 'GPE'}
   **novelty rule**: ans should be the one that doesn't appear in the Q
   - ans = "Old Kingdom"
+
+[BINARY]:
+Do the sentiment analysis for the top n sentences of candidate answer
+
+[DESCRIPTION][REASON]:
+reconstruct the candidate answer text to make it grammarly correct
