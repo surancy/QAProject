@@ -1,0 +1,32 @@
+### Input: article, question
+
+### Passage retrieval: find top N sentences with relavence
+
+### Answer generation:
+
+#### Question classification:
+##### wh- Questions:
+
+if Q starts with "who": [PERSON][ORG]
+
+if Q starts with "where": [LOC][GPE]
+
+if Q starts with "when": [DATE][TIME][CARDINAL]
+
+if Q stars with "what": 
+
+find NER in Q, then to decide which question type it is
+
+- What was reached not at Saqqara? Saqqara [GPE]
+
+if NER wasn't there, return the relavent n sentence
+
+##### binary Questions:
+
+if Q starts with "is", "are", "does", "do", "have", "has", "will", "would", "could": 
+sentiment analysis from most relavent sentence
+
+##### other questions:
+if Q doesn't fall into any of above category (DESCRIPTION/REASON):
+
+reconstruct the candidate answer text to make it grammarly correct
