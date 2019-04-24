@@ -1,6 +1,6 @@
 ### Input: article, question
 
-### Passage retrieval: find top N sentences with relavence
+### Passage retrieval: find top N sentences with relavence score
 
 ### Answer generation:
 
