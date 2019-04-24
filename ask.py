@@ -198,6 +198,8 @@ class genQuestions():
             question +="?"
         question = re.sub(r'\s{1,}(\?)', r'\1',question)
         question = re.sub(r'[^\w|^\d](\?)', r'\1',question)
+        if question.split(" ")[0] in self.ent_map.values() and question.split(" ")[1] == "the":
+            question = " ".join(["Why", " ".join(question.split(" ")[1:])])
         return qtype,question
 
 
