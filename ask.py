@@ -247,8 +247,10 @@ if __name__ == "__main__":
             else:
                 if "references" not in line.lower() and "notes" not in line.lower():
                     for h in ask.find_noun_phrases(parser.parse(line)):
-                        heading_candidates.append(re.sub(r'[^\s^a-z^A-Z^0-9]', ""," ".join(h.leaves())))
-                        break
+                        clean_heading = re.sub(r'[^\s^a-z^A-Z^0-9]', ""," ".join(h.leaves()))
+                        if not sum(1 for x in ask.not_allowed_headings if x in clean_heading ):
+                            heading_candidates.append(clean_heading)
+                            break
                 else:
                     end_of_headings = True
         else:
