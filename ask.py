@@ -26,7 +26,7 @@ class genQuestions():
             print("Invalid model size.")
         self.ent_map = {"PERSON": "Who", "ORG": "Who", "DATE": "When", "GPE":"What"}
         self.num_questions = num_questions
-        self.not_allowed_after_wh = ["{","[","(","\"",";",":",",", "in"] + list(self.ent_map.values())\
+        self.not_allowed_after_wh = ["it","{","[","(","\"",";",":",",", "in"] + list(self.ent_map.values())\
                             + list([x.lower() for x in self.ent_map.values()])
         
     def form_question(self, phrase, sentence):
@@ -56,14 +56,36 @@ class genQuestions():
         return list(sorted(distances, key= lambda x:x[1]))[0][0] 
 
     def processComma(self, question, substring, ent_pos):
+        og_question = question
+        question_before_ent = question[:ent_pos]
+        question_after_ent = question[ent_pos:]
+        question = question_after_ent
         if "," in question:
+            if ent_pos > og_question.index(substring):
+                question = question[:question.index(",")]
+            else:
+                return None
+        if ";" in question:
+            if ent_pos > og_question.index(substring):
+                question = question[:question.index(";")]
+            else:
+                return None        
+        return question_before_ent+question
+        '''if "," in question:
             if substring in question:
                 if question.index(",") > question.index(substring) \
                         and question.index(",") > ent_pos:
                     question = question[:question.index(",")]
             else:
                 return None
-        return question
+        if ";" in question:
+            if substring in question:
+                if question.index(";") > question.index(substring) \
+                        and question.index(";") > ent_pos:
+                    question = question[:question.index(";")]
+            else:
+                return None
+        return question'''
     
     def find_obj_pos(self, question, doc, tree):
         refined=""
@@ -197,32 +219,85 @@ class genQuestions():
         return result
 
 if __name__ == "__main__":
-    num_questions = int(sys.argv[2])
+    num_q = int(sys.argv[2])
     input_file = sys.argv[1]
     #questions = [None]*(num_questions)
-    questions=[]
+    WHquestions, YNquestions=[],[]
     q_count =0
+    ask = genQuestions( "medium", num_q)
     with open(input_file, "r") as file: 
         data = file.readlines()
     data_=[]
     for line in data:
-       blob= TextBlob(line)
-       for sent in blob.sentences:
-           data_.append(str(sent))
+        blob= TextBlob(line)
+        for sent in blob.sentences:
+            data_.append(str(sent))
     data = data_
-    ask = genQuestions( "medium", num_questions)
+    data_=[]
+    heading_candidates=[]
+    article_heading = None
+    end_of_headings =False
+    for line in data:
+        if (not end_of_headings) and len(line.split(" "))< 6 and line[-1] != ".":
+            if article_heading == None:
+                article_heading = line
+            else:
+                if "references" not in line.lower() and "notes" not in line.lower():
+                    for h in ask.find_noun_phrases(parser.parse(line)):
+                        heading_candidates.append(re.sub(r'[^\s^a-z^A-Z^0-9]', ""," ".join(h.leaves())))
+                else:
+                    end_of_headings = True
+        else:
+            data_.append(line)
+    data = data_
+    print(heading_candidates)
     lines_of_interest = ask.find_NER_SENT(data)
     for sentence in lines_of_interest:
         try:
             q_ = ask.gen(sentence)
-        except:
-            print("error in sentence: ", sentence)
+        except: 
+            continue
         if q_ is not None:
-            #questions[q_count] = ask.gen(sentence)
-            questions.append([sentence, q_])
-            q_count +=1
-        #if q_count == num_questions:
-        #    break
-    for (a,q) in questions:
-        print("Context: {}\n Q:{}\n\n".format(a,q))
-        print("\n")
+            if(q_[0] == "WH"):
+                WHquestions.append([sentence, q_[1]])
+            else:
+                YNquestions.append([sentence, q_[1]])
+    final_list=[]
+    remaining_list=[]
+    num_wh_q,wh_q_count = max(1,int(0.8*num_q)), 0
+    num_yn_q, yn_q_count = min(2,max(1,int(0.2*num_q))), 0
+    per_heading_thresh = max(1,int(0.1*num_wh_q))
+    random.shuffle(WHquestions)
+    for whQ in WHquestions:
+        final_list.append(whQ[1])
+        wh_q_count +=1
+        if num_wh_q < wh_q_count:
+            break
+    if(len(WHquestions)>num_wh_q):
+        WHquestions = WHquestions[num_wh_q:]
+    random.shuffle(YNquestions)
+    for i in range(num_yn_q):
+        final_list.append(YNquestions[i][1])
+    print(random.sample(["Comment on ", "Describe ", "Discuss about "],1)[0] ,\
+                random.sample(heading_candidates[:4], 1)[0].lower(), \
+                random.sample([" in context of ", " with regards to ", " in reference to "],1)[0],\
+                (article_heading))
+    if(num_q>10):
+        hard_q = random.sample(["Comment on ", "Describe ", "Discuss about "],1)[0] +\
+                random.sample(heading_candidates[:4], 1)[0].lower()+ \
+                random.sample([" in context of ", " with regards to ", " in reference to "],1)[0]+\
+                (article_heading)+"."
+        final_list.append(hard_q)
+    if len(final_list)< num_q:
+        new_list = random.sample(WHquestions, max(1, int(0.7*(num_q-len(final_list)))))\
+                    + random.sample(YNquestions, max(1, int(0.3*(num_q-len(final_list)))))
+    
+        for i in range(min(len(new_list),max(1,num_q -len(final_list)))):
+            if(len(new_list[i])>1):
+                final_list.append(new_list[i][1])
+            else:
+                final_list.append(new_list[i])
+    random.shuffle(final_list)
+    for q in final_list:
+        print(q)
+        print('\n')
