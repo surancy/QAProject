@@ -1,11 +1,6 @@
 """
-Update: 04/25 the full logic for PERSON ans type
-usage: text is the text of which can be extracted answers from. Q is the question.
-Some test cases are included at the bottom.
-====In progress===
-Updates: 04/20 9:00 pm
-Updates on Who and When questions to formalize the answer (i.e. a full sentence instead of single words)
-Refer to the testing section to see demo
+DISCARDED
+REFER TO Answering.py as the NEWEST VERSION
 """
 
 import spacy
