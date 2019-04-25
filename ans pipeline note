@@ -1,0 +1,64 @@
+### Input: article, question (list)
+
+### Passage retrieval:
+1. find top N sentences with relavence score
+2. select the one from 1 if has similar structure as Q
+3. if in 2 more than one sentences, go for the one with higher similarity
+4. if in 2 no similar structure found, go for the first sentence (the highest similarity score)
+
+### Answer generation:
+
+#### Question classification:
+##### wh- Questions:
+
+if Q starts with "who" or Q contains "whom" that is not followed by a comma: [PERSON]
+
+if Q starts with "where": [LOC]
+
+if Q starts with "when": [DATE]
+
+if Q stars with "what": [WHAT]
+
+##### binary Questions:
+
+if Q starts with "is", "are", "was", "were", "does", "do", "did", "have", "has", "had", "will", "would", "could"
+
+##### other questions:
+if Q doesn't fall into any of above category (DESCRIPTION/REASON):
+
+
+#### Answer types:
+[WHAT]:
+1. restructure the Q
+2. split the text into ngram based on the restructured Q
+3. restructure the text before Q's position in text
+4. find the NER tag in 3
+5. if in 4 no NER tag, restructure the text to find ans
+6. if in 3 no similar pattern found, restructure the text to find ans
+
+[PERSON]:
+1. Look for phrases with the NER tags: [PERSON][ORG] in the text that contains answer.
+2. Look for phrases where proper noun is the **subject** within sentence.
+3. if 2 is not satisfied, look for NER tags with [PERSON][ORG]
+4. if in 3 there are more than one phrase with the specified NER, apply **novelty rule**, ans = the one does not appear in Q
+5. if in 4 all NER tags are novel, look for the one with the closest distance from the sentence ROOT
+6. Process the Question to formalize the Answer.
+
+[DATE]:
+1. Look for phrases with the NER tags: [DATE][TIME][CARDINAL] from the text that contains answer.
+2. Use dependency parsing to formalize the answer.
+
+[LOC]:
+1. Look for phrases with the NER tags: [GPE][LOC], in the text that contains answer.
+2. if more than one correct NER in the candidate text:
+  - text = "The Old Kingdom is perhaps best known for the large number of pyramids constructed at this time as burial places for Egypt's kings"
+  - Q = "What is perhaps best known for the large number of pyramids constructed at this time as burial places for Egypt's kings?"
+  {'Old Kingdom': 'GPE', 'Egypt': 'GPE'}
+  **novelty rule**: ans should be the one that doesn't appear in the Q
+  - ans = "Old Kingdom"
+
+[BINARY]:
+Do the sentiment analysis for the top n sentences of candidate answer
+
+[DESCRIPTION][REASON]:
+reconstruct the candidate answer text to make it grammarly correct

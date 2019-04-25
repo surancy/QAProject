@@ -1,0 +1,80 @@
+Question:        What is called the Meidum pyramid?
+Candidate text   The first is called the Meidum pyramid, named for its location in Egypt
+Answer:          The first is called the Meidum pyramid.
+=================
+Question:        Who was the next great pyramid builder?
+Candidate text   After Djoser, Pharaoh Snefru was the next great pyramid builder
+Answer:          Pharaoh snefru.
+=================
+Question:        What was reached not at Saqqara?
+Candidate text   However, the full development of the pyramid style of building was reached not at Saqqara, but during the building of 'The Great Pyramids' at Giza. (**second setence)
+Answer:          Style of building was reached not at Saqqara.
+=================
+Question:        What was a period of internal security and prosperity, it was followed by a period of disunity and relative cultural decline referred to by Egyptologists as the First Intermediate Period?
+Candidate text   While the Old Kingdom was a period of internal security and prosperity, it was followed by a period of disunity and relative cultural decline referred to by Egyptologists as the First Intermediate Period
+Answer:          The old kingdom.
+=================
+Question:        Who was succeeded by his son Sahure who commanded an expedition to Punt?
+Candidate text   Userkaf was succeeded by his son Sahure (2487–2475 BC) who commanded an expedition to Punt
+Answer:          Bc.
+=================
+Question:        Describe third dynasty with regards to Old Kingdom of Egypt.
+Candidate text   The Old Kingdom is most commonly regarded as the period from the Third Dynasty through to the Sixth Dynasty (2686–2181 BC)
+Answer:          The Old Kingdom is most commonly regarded as the period from the Third Dynasty through to the Sixth Dynasty (2686–2181 BC)
+=================
+Question:        Is it true that egyptians in this era worshipped their Pharaoh as a god, believing that he ensured the annual flooding of the Nile that was necessary for their crops?
+Candidate text   Egyptians in this era worshipped their Pharaoh as a god, believing that he ensured the annual flooding of the Nile that was necessary for their crops
+Answer:          Yes.
+=================
+Question:        Is it true that there were military expeditions into Canaan and Nubia, with Egyptian influence reaching up the Nile into what is today the Sudan?
+Candidate text   There were military expeditions into Canaan and Nubia, with Egyptian influence reaching up the Nile into what is today the Sudan
+Answer:          Yes.
+=================
+Question:        Who is credited with the development of building with stone and with the conception of the new architectural form—the Step Pyramid?
+Candidate text   King Djoser's architect, Imhotep is credited with the development of building with stone and with the conception of the new architectural form—the Step Pyramid
+Answer:          Imhotep.
+=================
+Question:        What is perhaps best known for the large number of pyramids constructed at this time as burial places for Egypt's kings?
+Candidate text   The Old Kingdom is perhaps best known for the large number of pyramids constructed at this time as burial places for Egypt's kings
+Answer:          Old kingdom.
+=================
+Question:        What is frequently referred to as "the Age of the Pyramids?
+Candidate text   For this reason, the Old Kingdom is frequently referred to as "the Age of the Pyramids
+Answer:          Old kingdom.
+=================
+Question:        Who was the first to have an above-ground burial chamber?
+Candidate text   The Meidum pyramid was the first to have an above-ground burial chamber
+Answer:          Meidum.
+=================
+Question:        What is the period in the third millennium also known as?
+Candidate text   Old Kingdom of EgyptThe Old Kingdom is the period in the third millennium (c
+Answer:          Egyptthe old kingdom.
+=================
+Question:        What was coined by eighteenth-century historians and the distinction between the Old Kingdom and the Early Dynastic Period is not one which would have been recognized by Ancient Egyptians?
+Candidate text   The term itself was coined by eighteenth-century historians and the distinction between the Old Kingdom and the Early Dynastic Period is not one which would have been recognized by Ancient Egyptians
+Answer:          Itself.
+=================
+Question:        What is most commonly regarded as the period from the Third Dynasty through to the Sixth Dynasty?
+Candidate text   The Old Kingdom is most commonly regarded as the period from the Third Dynasty through to the Sixth Dynasty (2686–2181 BC)
+Answer:          Old kingdom.
+=================
+Question:        Who was in turn succeeded by Neferirkare Kakai who was Sahure's son?
+Candidate text   Sahure was in turn succeeded by Neferirkare Kakai (2475–2455 BC) who was Sahure's son
+Answer:          Sahure.
+=================
+Question:        What was initiated at Saqqara under his reign?
+Candidate text   A new era of building was initiated at Saqqara under his reign
+Answer:          Era of building was initiated at Saqqara under his reign.
+=================
+Question:        What was followed by two short-lived kings, his son Neferefre and Shepseskare?
+Candidate text   He was followed by two short-lived kings, his son Neferefre (2455–2453 BC) and Shepseskare, the latter of uncertain parentage
+Answer:          He.
+=================
+Question:        Why the royal capital of Egypt was moved to Memphis?
+Candidate text   Under King Djoser, the first king of the Third Dynasty of the Old Kingdom, the royal capital of Egypt was moved to Memphis, where Djoser established his court
+Answer:          The third dynasty of the old kingdom.
+=================
+Question:        What was Djoser in Memphis' necropolis?
+Candidate text   After Djoser, Pharaoh Snefru was the next great pyramid builder
+Answer:          After Djoser, Pharaoh Snefru was the next great pyramid builder
+=================

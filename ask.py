@@ -237,6 +237,7 @@ if __name__ == "__main__":
             data_.append(str(sent))
     data = data_
     data_=[]
+    #heading_extraction_begin
     heading_candidates=[]
     article_heading = None
     end_of_headings =False
@@ -256,7 +257,12 @@ if __name__ == "__main__":
         else:
             data_.append(line)
     data = data_
+<<<<<<< HEAD
     # print(heading_candidates)
+=======
+    #Heading_extraction_end
+    #print(heading_candidates)
+>>>>>>> 9b82f2c96ebb42f6e95aeae952d9697439d7bc2d
     lines_of_interest = ask.find_NER_SENT(data)
     for sentence in lines_of_interest:
         try:
