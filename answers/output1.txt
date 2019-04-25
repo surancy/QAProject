@@ -1,0 +1,99 @@
+Question:        What was relied upon to feed the population?
+
+Candidate text   Agriculture and climateThroughout the history of ancient Egypt, the annual flooding of the Nile River to inundate the fields on its banks was relied upon to feed the population
+Answer:          The nile river.
+=================
+Question:        Who was succeeded by Mentuhotep IV?
+
+Candidate text   Sobekhotep IV was succeeded by the short reign of Sobekhotep V, who was followed by Wahibre Ibiau, then Merneferre Ai
+Answer:          Sobekhotep iv.
+=================
+Question:        Is it true that after a reign of 45 years, Amenemhet III was succeeded by Amenemhet IV, whose nine-year reign is not poorly attested?
+
+Candidate text   After a reign of 45 years, Amenemhet III was succeeded by Amenemhet IV, whose nine-year reign is poorly attested
+Answer:          No.
+=================
+Question:        What was the block statue, which would continue to be popular through to the Ptolemaic age almost 2?
+
+Candidate text   ArtOne of the innovations in sculpture that occurred during the Middle Kingdom was the block statue, which would continue to be popular through to the Ptolemaic age almost 2,000 years later
+Answer:          The middle kingdom.
+=================
+Question:        What is remarkable for the degree to which Egypt exploited its resources?
+
+Candidate text   His reign is remarkable for the degree to which Egypt exploited its resources
+Answer:          His reign.
+=================
+Question:        What is true that the large tombs indicative of nomarchs disappear at the end of the twelfth dynasty?
+
+Candidate text   While it is true that the large tombs indicative of nomarchs disappear at the end of the twelfth dynasty, grand royal tombs also disappear soon thereafter due to general instability surrounding the decline of the Middle Kingdom
+Answer:          It.
+=================
+Question:        What is certain is that, however What came to power, Amenemhet I was not of royal birth?
+
+Candidate text   What is certain is that, however he came to power, Amenemhet I was not of royal birth
+Answer:          What.
+=================
+Question:        What was to be concluded by Mentuhotep II?
+
+Candidate text   The struggle was to be concluded by Mentuhotep II, who ascended the Theban throne in 2055 B
+Answer:          The struggle.
+=================
+Question:        Who was compelled to campaign in the Delta region, which had not received as much attention as upper Egypt during the 11th Dynasty?
+
+Candidate text   Early in his reign, Amenemhet I was compelled to campaign in the Delta region, which had not received as much attention as upper Egypt during the 11th Dynasty
+Answer:          His reign.
+=================
+Question:        What is unknown, but is presumably near the city's necropolis, the present-day el-Lisht?
+
+Candidate text   The location of this capital is unknown, but is presumably near the city's necropolis, the present-day el-Lisht
+Answer:          The location of this capital is unknown, but is presumably near the city's necropolis, the present-day el-lisht
+=================
+Question:        Who suggest that he was attacked at a place called Shedyet-sha by the forces of the reigning king?
+
+Candidate text   Inscriptions left by one Nehry, the Haty-a of Hermopolis, suggest that he was attacked at a place called Shedyet-sha by the forces of the reigning king, but his forces prevailed
+Answer:          Hermopolis.
+=================
+Question:        Who is regarded as the founder of the Middle Kingdom?
+
+Candidate text   For this reason, Mentuhotep II is regarded as the founder of the Middle Kingdom
+Answer:          This reason.
+=================
+Question:        Comment on reunification under the eleventh dynasty with regards to Middle Kingdom of Egypt.
+
+Candidate text   Middle Kingdom of EgyptThe Middle Kingdom of Egypt (also known as The Period of Reunification) is the period in the history of ancient Egypt between circa 2050 BC and 1710 BC, stretching from the reunification of Egypt under the impulse of Mentuhotep II of the Eleventh Dynasty to the end of the Twelfth Dynasty
+Answer:          Middle kingdom of egyptthe middle kingdom of egypt (also known as the period of reunification) is the period in the history of ancient egypt between circa 2050 bc and 1710 bc, stretching from the reunification of egypt under the impulse of mentuhotep ii of the eleventh dynasty to the end of the twelfth dynasty
+=================
+Question:        Who was thought to have reigned next?
+
+Candidate text   Decline into the Second Intermediate PeriodAfter the death of Sobeknefru, the throne may have passed to Sekhemre Khutawy Sobekhotep, though in older studies Wegaf, who had previously been the Great Overseer of Troops, was thought to have reigned next
+Answer:          The great overseer of troops.
+=================
+Question:        Who was worshiped as a patron God by Egyptian settlers?
+
+Candidate text   In Nubia, Senusret was worshiped as a patron God by Egyptian settlers
+Answer:          Nubia.
+=================
+Question:        Who is non-existent?
+
+Candidate text   Evidence for military activity of any kind during the reign of Senusret II is non-existent
+Answer:          Evidence for military activity of any kind during the reign of senusret ii is non-existent
+=================
+Question:        What perhaps explains why Amenemhet IV was succeeded by Sobekneferu?
+
+Candidate text   Sobekhotep IV was succeeded by the short reign of Sobekhotep V, who was followed by Wahibre Ibiau, then Merneferre Ai
+Answer:          Sobekhotep iv was succeeded by the short reign of sobekhotep v, who was followed by wahibre ibiau, then merneferre ai
+=================
+Question:        What was ruled by the rival 10th Dynasty from Herakleopolis?
+
+Candidate text   To the north, Lower Egypt was ruled by the rival 10th Dynasty from Herakleopolis
+Answer:          The north.
+=================
+Question:        Is it true that the power of the Nomarchs seems to drop off permanently during his reign, which has been taken to indicate that the central government had finally suppressed them, though there is no record that Senusret ever took direct action against them?
+
+Candidate text   The power of the Nomarchs seems to drop off permanently during his reign, which has been taken to indicate that the central government had finally suppressed them, though there is no record that Senusret ever took direct action against them
+Answer:          Yes.
+=================
+Question:        What was divided into three waret, or administrative divisions: North, South?
+Candidate text   Egypt was divided into three waret, or administrative divisions: North, South, and Head of the South (perhaps Lower Egypt, most of Upper Egypt, and the nomes of the original Theban kingdom during the war with Herakleopolis, respectively)
+Answer:          Upper egypt.
+=================
