@@ -210,7 +210,7 @@ def person_ans(Q,text):
 def binary_ans(strText):
     ans = "Yes."
     testimonial = TextBlob(strText)
-    print(testimonial.sentiment.polarity)
+#     print(testimonial.sentiment.polarity)
     if testimonial.sentiment.polarity >= -0.1:
         ans = "Yes."
     else:
