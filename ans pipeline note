@@ -4,6 +4,7 @@
 1. find top N sentences with relavence score
 2. select the one from 1 if has similar structure as Q
 3. if in 2 more than one sentences, go for the one with higher similarity
+4. if in 2 no similar structure found, go for the first sentence (the highest similarity score)
 
 ### Answer generation:
 
@@ -32,7 +33,9 @@ if Q doesn't fall into any of above category (DESCRIPTION/REASON):
 1. restructure the Q
 2. split the text into ngram based on the restructured Q
 3. restructure the text before Q's position in text
-4. 
+4. find the NER tag in 3
+5. if in 4 no NER tag, restructure the text to find ans
+6. if in 3 no similar pattern found, restructure the text to find ans
 
 [PERSON]:
 1. Look for phrases with the NER tags: [PERSON][ORG] in the text that contains answer.
