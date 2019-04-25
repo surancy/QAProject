@@ -33,7 +33,8 @@ if Q doesn't fall into any of above category (DESCRIPTION/REASON):
 #### Answer types:
 [PERSON]:
 1. Look for phrases with the NER tags: [PERSON][ORG] in the text that contains answer.
-2. only look for phrases where proper noun is the **subject** within sentence.
+2. Look for phrases where proper noun is the **subject** within sentence.
+3. If proper noun with these two tags is not the subject, ans is the proper noun with the tag
 3. Process the Question to formalize the Answer.
 
 [DATE]:
