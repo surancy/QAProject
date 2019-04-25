@@ -233,14 +233,6 @@ def time_ans(Q,text):
         if (v == "DATE" or v == "CARDINAL" or v == "TIME" or v == "QUANTITY"):
             ans = str(k).capitalize() + "."
 
-    # handle the case when BC / AD should be included (if NER tagging ignores)
-    token_text = strText.split()
-    for i,words in enumerate(token_text):
-        if token_text[i] == ans and "BC" in token_text[i+1]:
-            ans = str(ans).capitalize() + " BC" + "."
-        if token_text[i] == ans and "AD" in token_text[i+1]:
-            ans = str(ans).capitalize() + " AD" + "."
-
     return ans
 
 
