@@ -257,12 +257,10 @@ if __name__ == "__main__":
         else:
             data_.append(line)
     data = data_
-<<<<<<< HEAD
-    # print(heading_candidates)
-=======
+
     #Heading_extraction_end
     #print(heading_candidates)
->>>>>>> 9b82f2c96ebb42f6e95aeae952d9697439d7bc2d
+
     lines_of_interest = ask.find_NER_SENT(data)
     for sentence in lines_of_interest:
         try:
@@ -294,15 +292,22 @@ if __name__ == "__main__":
     #            random.sample(heading_candidates[:4], 1)[0].lower(), \
     #            random.sample([" in context of ", " with regards to ", " in reference to "],1)[0],\
     #            (article_heading))
-    if(num_q>10):
+    #YNquestions = YNquestions[num_yn_q:]
+        
+    for i in range(int(num_q/10)):
         hard_q = random.sample(["Comment on ", "Describe ", "Discuss about "],1)[0] +\
                 random.sample(heading_candidates[:4], 1)[0].lower()+ \
                 random.sample([" in context of ", " with regards to ", " in reference to "],1)[0]+\
                 (article_heading)+"."
         final_list.append(hard_q)
     if len(final_list)< num_q:
-        new_list = random.sample(WHquestions, max(1, int(0.7*(num_q-len(final_list)))))\
-                    + random.sample(YNquestions, max(1, int(0.3*(num_q-len(final_list)))))
+        if len(WHquestions) < int(0.7*(num_q-len(final_list))+1):
+            WHquestions = WHquestions*int(0.7*(num_q-len(final_list)))
+        if len(YNquestions) < int(0.3*(num_q-len(final_list))):
+            YNquestions = YNquestions*int(0.3*(num_q-len(final_list))+1)
+
+        new_list = random.sample(WHquestions, max(1, int(1+0.7*(num_q-len(final_list)))))\
+                    + random.sample(YNquestions, max(1, int(1+0.3*(num_q-len(final_list)))))
     
         for i in range(min(len(new_list),max(1,num_q -len(final_list)))):
             if(len(new_list[i])>1):
@@ -310,6 +315,8 @@ if __name__ == "__main__":
             else:
                 final_list.append(new_list[i])
     random.shuffle(final_list)
+    if(len(final_list)>num_q):
+        final_list = final_list[:num_q+1]
     for q in final_list:
         print(q)
         print('\n')
