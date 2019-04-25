@@ -1,6 +1,9 @@
 ### Input: article, question (list)
 
-### Passage retrieval: find top N sentences with relavence score
+### Passage retrieval:
+1. find top N sentences with relavence score
+2. select the one from 1 if has similar structure as Q
+3. if in 2 more than one sentences, go for the one with higher similarity
 
 ### Answer generation:
 
@@ -13,13 +16,7 @@ if Q starts with "where": [LOC]
 
 if Q starts with "when": [DATE]
 
-if Q stars with "what": 
-
-find the headword after the "what" question word
-
-- What was **reached** not at Saqqara?
-
-if headword has NER, then decide which question type it is
+if Q stars with "what": [WHAT]
 
 
 ##### binary Questions:
@@ -31,6 +28,12 @@ if Q doesn't fall into any of above category (DESCRIPTION/REASON):
 
 
 #### Answer types:
+[WHAT]:
+1. restructure the Q
+2. split the text into ngram based on the restructured Q
+3. restructure the text before Q's position in text
+4. 
+
 [PERSON]:
 1. Look for phrases with the NER tags: [PERSON][ORG] in the text that contains answer.
 2. Look for phrases where proper noun is the **subject** within sentence.
