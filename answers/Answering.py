@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[210]:
+# In[5]:
 
 
 import spacy
@@ -10,67 +10,62 @@ nlp = en_core_web_sm.load()
 from textblob import TextBlob
 
 
-# In[211]:
+# In[2]:
 
 
 # files
-# what we got from the ask.py
-question = "set1_a1.txt"
-# what we got from the passage retrieval - first liners
-candidate = "set1_a1_ansCandidate_temp.txt"
-
-with open(question,'r') as file:
-    questionList = file.readlines()
-questionList = [lines.rstrip() for lines in questionList] # remove "\n"
-
-with open(candidate,"r") as file:
-    candidateList = file.readlines()
-candidateList = [lines.rstrip() for lines in candidateList] # remove "\n"
+# input: two lists: questionList, candidateList
+# output: ans txt
 
 
-# In[218]:
+# In[6]:
 
 
-binaryQ = ["is", "isn't", "are", "aren't", "am", "was", "wasn't", "were", "weren't", "does", "doesn't", "do",
+def questionClassification(questionList, candidateList):
+    binaryQ = ["is", "isn't", "are", "aren't", "am", "was", "wasn't", "were", "weren't", "does", "doesn't", "do",
            "don't", "did", "didn't", "have", "havn't", "has", "hasn't", "had", "hadn't", "will", "won't", 
            "would", "wouldn't", "could", "couldn't", "can", "can't"]
-binaryDct = dict(zip(binaryQ,[i for i in range(len(binaryQ))]))
-ans = ""
-ansList = list()
+    binaryDct = dict(zip(binaryQ,[i for i in range(len(binaryQ))]))
+    ans = ""
+    ansList = list()
 
 
-for i in range(len(questionList)):
-    Q = nlp(questionList[i])
-    text = nlp(candidateList[i])
-    
-    
-    if "whom" in [w.text for w in Q] or "who" in [w.text for w in Q]:
-        ans = person_ans(Q,text)
-    elif binaryDct.get(str(Q[0]).lower()) != None:
-        ans = binary_ans(str(text))
-    elif str(Q[0]).lower() == "when":
-        ans = time_ans(Q,text)
-    elif str(Q[0]).lower() == "where":
-        ans = loc_ans(Q,text)
-    else:
-        ans = general_ans(Q,text)
-
-    ansList.append(ans)
-    print("Question:       ", str(Q))
-    print("Candidate text  ", str(text))
-    print("Answer:         ", ans)
-    print("=================")
+    for i in range(len(questionList)):
+        Q = nlp(questionList[i])
+        text = nlp(candidateList[i])
 
 
-# In[153]:
+        if "whom" in [w.text for w in Q] or "who" in [w.text for w in Q]:
+            ans = person_ans(Q,text)
+        elif binaryDct.get(str(Q[0]).lower()) != None:
+            ans = binary_ans(str(text))
+        elif str(Q[0]).lower() == "when":
+            ans = time_ans(Q,text)
+        elif str(Q[0]).lower() == "where":
+            ans = loc_ans(Q,text)
+        else:
+            ans = general_ans(Q,text)
+            
+        ansList.append(ans)
+        print("Question:       ", str(Q))
+        print("Candidate text  ", str(text))
+        print("Answer:         ", ans)
+        print("=================")
+        
+    return ansList
 
 
-with open ("answers_s1a1.txt", "w") as output:
-    for ans in ansList:
-        output.write(ans+ "\n")
+# In[7]:
 
 
-# In[212]:
+def writeout(stdoutpath,questionList,candidateList):
+    ansList = questionClassification(questionList,candidateList)
+    with open (stdoutpath, "w") as output:
+        for ans in ansList:
+            output.write(ans+ "\n")
+
+
+# In[8]:
 
 
 def general_ans(Q,text):
@@ -114,13 +109,13 @@ def general_ans(Q,text):
     return ans
 
 
-# In[213]:
+# In[15]:
 
 
 # helper function to reconstruct Q
 def reconstructQ(Question):
     # Q is spacy tokenized
-    cleanQ = list(Q)
+    cleanQ = list(Question)
     # Reconstruct Q
     ## get rid of question mark at the end, if any
     cleanQ = [str(words) for words in cleanQ if str(words) != "?"]
@@ -135,7 +130,7 @@ def reconstructQ(Question):
     return strQbody
 
 
-# In[214]:
+# In[10]:
 
 
 def person_ans(Q,text):
@@ -204,7 +199,7 @@ def person_ans(Q,text):
     return ans
 
 
-# In[215]:
+# In[17]:
 
 
 def binary_ans(strText):
@@ -218,7 +213,7 @@ def binary_ans(strText):
     return ans
 
 
-# In[216]:
+# In[12]:
 
 
 def time_ans(Q,text):
@@ -232,11 +227,11 @@ def time_ans(Q,text):
     for k,v in ent_dict.items():
         if (v == "DATE" or v == "CARDINAL" or v == "TIME" or v == "QUANTITY"):
             ans = str(k).capitalize() + "."
-
+    
     return ans
 
 
-# In[217]:
+# In[13]:
 
 
 def loc_ans(Q,text):
@@ -259,59 +254,9 @@ def loc_ans(Q,text):
     return ans
 
 
-# In[160]:
+# In[18]:
 
 
-# =======Test case from writeup=========
-text = "Pittsburgh was named in 1758 by General John Forbes, in honor of British statesman William Pitt, 1st Earl of Chatham."
-# Q = "When was Pittsburgh named by General John Forbes, in honor of British statesman William Pitt, 1st Earl of Chatham?"
-## ans: 1758.
-
-# Q = "What was named in 1758 by General John Forbes?"
-# ans: Pittsburgh.
-
-# Q = "Who named Pittsburgh in 1758?"
-## ans: John Forbes.
-
-# Q = "In honor of whom was Pittsburgh named in 1758 by General John Forbes?"
-## ans: British statesman william pitt.
-
-
-# In[169]:
-
-
-# ===== Test some gabagge input =====
-text = "this is totally not what we are looking for"
-Q = "this is not gonna make sense."
-
-
-# In[170]:
-
-
-Q = "What is the period in the third millennium also known as?"
-text = "Old Kingdom of EgyptThe Old Kingdom is the period in the third millennium (c"
-
-
-# In[208]:
-
-
-Q = "Is it true that have CMU been built?"
-text = "I don't actually hate to learn mathmetics at all, in fact, it was one of my favorite"
-
-
-# In[209]:
-
-
-text = nlp(text)
-Q = nlp(Q)
-# time_ans(Q, text) # 1758.
-# general_ans(Q,text) #Pittsburgh.
-# person_ans(Q,text) # 1. John Forbes. 2. British statesman william pitt.
-# binary_ans(str(text))
-
-
-# In[ ]:
-
-
+writeout("testAns.txt",questionList,candidateList)
 
 
