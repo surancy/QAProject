@@ -316,7 +316,7 @@ if __name__ == "__main__":
                 final_list.append(new_list[i])
     random.shuffle(final_list)
     if(len(final_list)>num_q):
-        final_list = final_list[:num_q+1]
+        final_list = final_list[:num_q]
     for q in final_list:
         print(q)
         print('\n')
