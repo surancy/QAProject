@@ -256,7 +256,7 @@ if __name__ == "__main__":
         else:
             data_.append(line)
     data = data_
-    print(heading_candidates)
+    # print(heading_candidates)
     lines_of_interest = ask.find_NER_SENT(data)
     for sentence in lines_of_interest:
         try:
