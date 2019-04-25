@@ -1,5 +1,5 @@
 """
-...changing the question classification criteria
+Update: 04/25 the full logic for PERSON ans type
 usage: text is the text of which can be extracted answers from. Q is the question.
 Some test cases are included at the bottom.
 ====In progress===
@@ -116,7 +116,65 @@ def ans(text,Q):
     
     return ans
 
+# PERSON answer type
+# Question processing
+strQbody = reconstructQ(Q)
 
+ent_dict = dict()
+ent_person_dict = dict()
+ent_dict_q = dict()
+ent_q_person = list()
+
+for X in text.ents:
+    ent_dict[X.text] = X.label_
+for k,v in ent_dict.items():
+    if (v == "PERSON" or v == "ORG"):
+        ent_person_dict[k] = v
+for X in Q.ents:
+    ent_dict_q[X.text] = X.label_
+
+for key in ent_person_dict:
+    for k in ent_dict_q:
+        if key == k:
+            ent_q_person.append(key)
+            
+for tokens in text:
+    for k,v in ent_dict.items():
+        # if the phrase with correct NER tag is also the subject of the sentence, find the ans
+        if (tokens.dep_ == "nsubj"):
+            if (v == "PERSON" or v == "ORG"):
+                ans = str(tokens.text).capitalize() + " " + strQbody + "."
+        # if the phrase is not the subject and there are more than one correct NER
+        else:
+            # apply novelty rule
+            if (len(ent_q_person) >= 1):
+                for key in ent_person_dict:
+                    for k in ent_q_person:
+                        if key != k:
+                            ans = key + "."
+            # if novelty rule not work because all phrases are new, find ans with the closest distance from text root
+            else:
+                lst = strText.split()
+                distance = {}
+                for i,token in enumerate(lst):
+                    if (token == "named"):
+                        rooti = i
+                        break
+
+                for i,token in enumerate(lst):
+                    distance[token] = i
+                    distance[token] = distance[token] - rooti
+
+                ent_distance = {}
+                for token,dis in distance.items():
+                    for ent,tag in ent_dict.items():
+                        if (tag == "PERSON" or tag == "ORG"):
+                            if token in ent:
+                                ent_distance[ent] = distance[token]
+
+                ans = min(ent_distance, key=ent_distance.get) + " " + strQbody + "."
+                
+print(ans)
 # ===========Testing============= #
 ## WHO
 text = "Queen Hatshepsut concentrated on expanding Egypt's external trade by sending a commercial expedition to the land of Punt."
