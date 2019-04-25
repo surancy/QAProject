@@ -34,8 +34,9 @@ if Q doesn't fall into any of above category (DESCRIPTION/REASON):
 [PERSON]:
 1. Look for phrases with the NER tags: [PERSON][ORG] in the text that contains answer.
 2. Look for phrases where proper noun is the **subject** within sentence.
-3. If proper noun with these two tags is not the subject, ans is the proper noun with the tag
-3. Process the Question to formalize the Answer.
+3. If proper noun with these two tags is not the subject, ans is the proper noun with the tag, if only one tag exist
+4. If more than one tags, and the noun is not the subject, look for the one with the closest distance
+5. Process the Question to formalize the Answer.
 
 [DATE]:
 1. Look for phrases with the NER tags: [DATE][TIME][CARDINAL] from the text that contains answer.
