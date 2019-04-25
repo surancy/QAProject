@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[210]:
 
 
 import spacy
@@ -10,7 +10,7 @@ nlp = en_core_web_sm.load()
 from textblob import TextBlob
 
 
-# In[2]:
+# In[211]:
 
 
 # files
@@ -28,7 +28,7 @@ with open(candidate,"r") as file:
 candidateList = [lines.rstrip() for lines in candidateList] # remove "\n"
 
 
-# In[116]:
+# In[218]:
 
 
 binaryQ = ["is", "isn't", "are", "aren't", "am", "was", "wasn't", "were", "weren't", "does", "doesn't", "do",
@@ -62,13 +62,21 @@ for i in range(len(questionList)):
     print("=================")
 
 
-# In[113]:
+# In[153]:
+
+
+with open ("answers_s1a1.txt", "w") as output:
+    for ans in ansList:
+        output.write(ans+ "\n")
+
+
+# In[212]:
 
 
 def general_ans(Q,text):
     # Reconstruct Q
     strQbody = reconstructQ(Q)
-    ans = ""
+    ans = str(text).capitalize()
     stoppingIndex = 0
     strText = str(text)
     ent_dict = dict()
@@ -102,13 +110,11 @@ def general_ans(Q,text):
                     ans = str(chunks.root.head.head).capitalize() + " " + "of " + str(chunks) + " " + strQbody + "."
                 else:
                     ans = str(chunks).capitalize() + "."
-    else:
-        ans = str(text)
 
     return ans
 
 
-# In[4]:
+# In[213]:
 
 
 # helper function to reconstruct Q
@@ -129,15 +135,14 @@ def reconstructQ(Question):
     return strQbody
 
 
-# In[115]:
+# In[214]:
 
 
 def person_ans(Q,text):
     strQbody = reconstructQ(Q)
-    strText = str(text)
+    strText = str(text).capitalize()
     rooti = 0
-    ans = ""
-
+    ans = strText
     # default ans:
     # if no correct NER tags found in text, reconstruct it            
     # for chunks in text.noun_chunks:
@@ -183,7 +188,8 @@ def person_ans(Q,text):
         for ent,tag in ent_person_dict.items():
             if token in ent:
                 ent_distance[ent] = distance[token]
-    ans = str(min(ent_distance, key=ent_distance.get)).capitalize() + "."
+    if (len(ent_distance) != 0):
+        ans = str(min(ent_distance, key=ent_distance.get)).capitalize() + "."
 
     for key in ent_person_dict.keys():
         for keys in ent_q_person:
@@ -198,27 +204,27 @@ def person_ans(Q,text):
     return ans
 
 
-# In[6]:
+# In[215]:
 
 
 def binary_ans(strText):
+    ans = "Yes."
     testimonial = TextBlob(strText)
-#     print(testimonial.sentiment.polarity)
+    print(testimonial.sentiment.polarity)
     if testimonial.sentiment.polarity >= -0.1:
         ans = "Yes."
     else:
         ans = "No."
-        
     return ans
 
 
-# In[7]:
+# In[216]:
 
 
 def time_ans(Q,text):
     # TIME/QUANTITY Ans type
-    strText = str(text)
-    ans = ""
+    strText = str(text).capitalize()
+    ans = strText
     # dict to store NER tags of the text
     ent_dict = dict()
     for X in text.ents:
@@ -235,19 +241,14 @@ def time_ans(Q,text):
         if token_text[i] == ans and "AD" in token_text[i+1]:
             ans = str(ans).capitalize() + " AD" + "."
 
-    # Dependency parsing for noun phrases in Question to formalize the answer
-    for chunk in Q.noun_chunks:
-        if chunk.root.dep_ == "nsubj":
-            ans = str(chunk.text).capitalize() + " " + str(chunk.root.head.text) + " in the period of " + ans
-
     return ans
 
 
-# In[16]:
+# In[217]:
 
 
 def loc_ans(Q,text):
-    ans = ""
+    ans = str(text).capitalize()
     ent_dict_q = dict()
     for X in Q.ents:
         ent_dict_q[X.text] = X.label_
@@ -257,7 +258,7 @@ def loc_ans(Q,text):
         if (str(X.label_) == "GPE" or str(X.label_) == "LOC"):
             ent_dict_text[X.text] = X.label_
     for k,v in ent_dict_text.items():
-        # if there is more than one correct NER category, apply novelty rule
+        # if there is more than one correct NER category, apply the novelty rule
         if len(ent_dict_text) > 1:
             for key in ent_dict_text:
                 if key not in ent_dict_q:
@@ -266,7 +267,7 @@ def loc_ans(Q,text):
     return ans
 
 
-# In[91]:
+# In[160]:
 
 
 # =======Test case from writeup=========
@@ -284,7 +285,29 @@ text = "Pittsburgh was named in 1758 by General John Forbes, in honor of British
 ## ans: British statesman william pitt.
 
 
-# In[111]:
+# In[169]:
+
+
+# ===== Test some gabagge input =====
+text = "this is totally not what we are looking for"
+Q = "this is not gonna make sense."
+
+
+# In[170]:
+
+
+Q = "What is the period in the third millennium also known as?"
+text = "Old Kingdom of EgyptThe Old Kingdom is the period in the third millennium (c"
+
+
+# In[208]:
+
+
+Q = "Is it true that have CMU been built?"
+text = "I don't actually hate to learn mathmetics at all, in fact, it was one of my favorite"
+
+
+# In[209]:
 
 
 text = nlp(text)
@@ -292,18 +315,7 @@ Q = nlp(Q)
 # time_ans(Q, text) # 1758.
 # general_ans(Q,text) #Pittsburgh.
 # person_ans(Q,text) # 1. John Forbes. 2. British statesman william pitt.
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
+# binary_ans(str(text))
 
 
 # In[ ]:
