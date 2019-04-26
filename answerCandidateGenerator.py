@@ -229,21 +229,38 @@ def time_ans(Q,text):
 def loc_ans(Q,text):
     # default ans
     ans = str(text)[:1].upper() + str(text)[1:]
+    strText = str(text)
+    ent_dict = dict()
+    ent_person_dict = dict()
     ent_dict_q = dict()
+    ent_q_person = list()
+
+    for X in text.ents:
+        ent_dict[X.text] = X.label_
+    for k,v in ent_dict.items():
+        if (v == "LOC" or v == "GPE"):
+            ent_person_dict[k] = v
+
     for X in Q.ents:
         ent_dict_q[X.text] = X.label_
-        
-    ent_dict_text = dict()
-    for X in text.ents:
-        if (str(X.label_) == "GPE" or str(X.label_) == "LOC"):
-            ent_dict_text[X.text] = X.label_
-    for k,v in ent_dict_text.items():
-        # if there is more than one correct NER category, apply the novelty rule
-        if len(ent_dict_text) > 1:
-            for key in ent_dict_text:
-                if key not in ent_dict_q:
-                    ans = str(key)[:1].upper() + str(key)[1:] + "."
-                    
+
+    for key in ent_person_dict:
+        for k in ent_dict_q:
+            if key == k:
+                ent_q_person.append(key)
+
+    # go for the NER with LOCATION tags
+    for key in ent_person_dict.keys():
+        print("i am here with ner in text")
+        ans = str(key)[:1].upper() + str(key)[1:] + "."
+    # if more than one NER, apply novelty rule
+    for key in ent_person_dict.keys():
+        for keys in ent_q_person:
+            print("i am here with ner in Q")
+            for chunks in text.noun_chunks:
+                if (str(chunks.root) not in str(keys) and str(chunks.root) in key):
+                    ans = str(chunks)[:1].upper() + str(chunks)[1:] + "."
+    
     return ans
 
 # ====== generates and prints out the answer ======
