@@ -50,6 +50,7 @@ for question in questionList:
     answerList.append(answer(question,sentences)[0][0])
 
 
+
 def questionClassification(questionList, candidateList):
     binaryQ = ["is", "isn't", "are", "aren't", "am", "was", "wasn't", "were", "weren't", "does", "doesn't", "do",
            "don't", "did", "didn't", "have", "havn't", "has", "hasn't", "had", "hadn't", "will", "won't", 
@@ -245,5 +246,7 @@ def loc_ans(Q,text):
                     
     return ans
 
-writeout("answer.txt",questions,answerList)
+# ====== generates and prints out the answer ======
+questionClassification(questions,answerList)
+
 
