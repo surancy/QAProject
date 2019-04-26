@@ -251,12 +251,10 @@ def loc_ans(Q,text):
 
     # go for the NER with LOCATION tags
     for key in ent_person_dict.keys():
-        print("i am here with ner in text")
         ans = str(key)[:1].upper() + str(key)[1:] + "."
     # if more than one NER, apply novelty rule
     for key in ent_person_dict.keys():
         for keys in ent_q_person:
-            print("i am here with ner in Q")
             for chunks in text.noun_chunks:
                 if (str(chunks.root) not in str(keys) and str(chunks.root) in key):
                     ans = str(chunks)[:1].upper() + str(chunks)[1:] + "."
