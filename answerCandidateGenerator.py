@@ -51,11 +51,11 @@ for question in questionList:
 
 
 def questionClassification(questionList, candidateList):
-    binaryQ = ["is", "isn't", "are", "aren't", "am", "was", "wasn't", "were", "weren't", "does", "doesn't", "do", "don't", "did", "didn't", "have", "havn't", "has", "hasn't", "had", "hadn't", "will", "won't", "would", "wouldn't", "could", "couldn't", "can", "can't"]  
-    print("i am here at qustion generation")
+    binaryQ = ["is", "isn't", "are", "aren't", "am", "was", "wasn't", "were", "weren't", "does", "doesn't", "do",
+           "don't", "did", "didn't", "have", "havn't", "has", "hasn't", "had", "hadn't", "will", "won't", 
+           "would", "wouldn't", "could", "couldn't", "can", "can't"]
     binaryDct = dict(zip(binaryQ,[i for i in range(len(binaryQ))]))
     ans = ""
-    ansList = list()
 
 
     for i in range(len(questionList)):
@@ -63,7 +63,7 @@ def questionClassification(questionList, candidateList):
         text = nlp(candidateList[i])
 
 
-        if "whom" in [w.text for w in Q] or "who" in [w.text for w in Q]:
+        if "whom" in [w.text.lower() for w in Q] or "who" in [w.text.lower() for w in Q]:
             ans = person_ans(Q,text)
         elif binaryDct.get(str(Q[0]).lower()) != None:
             ans = binary_ans(str(text))
@@ -73,27 +73,16 @@ def questionClassification(questionList, candidateList):
             ans = loc_ans(Q,text)
         else:
             ans = general_ans(Q,text)
-            
-        ansList.append(ans)
-        print("Question:       ", str(Q))
-        print("Candidate text  ", str(text))
-        print("Answer:         ", ans)
-        print("=================")
-        
-    return ansList
-
-
-def writeout(stdoutpath,questionList,candidateList):
-    ansList = questionClassification(questionList,candidateList)
-    with open (stdoutpath, "w") as output:
-        for ans in ansList:
-            output.write(ans+ "\n")
+        # print the answer
+        print(ans)
+        print('\n')
 
 
 def general_ans(Q,text):
     # Reconstruct Q
     strQbody = reconstructQ(Q)
-    ans = str(text).capitalize()
+    # default ans
+    ans = str(text)[:1].upper() + str(text)[1:]
     stoppingIndex = 0
     strText = str(text)
     ent_dict = dict()
@@ -113,20 +102,20 @@ def general_ans(Q,text):
     if (patternFlag):
         NERflag = False
         # default ans when the pattern matches
-        ans = str(longSentence).capitalize() + " " + strQbody + "."
+        ans = str(longSentence)[:1].upper() + str(longSentence)[1:] + " " + strQbody + "."
         # if NER tags exist in the longSentence's noun phrases' root
         for chunks in longSentence.noun_chunks:
             for keys in ent_dict.keys():
                 if str(chunks.root) in str(keys):
-                    ans = str(keys).capitalize() + "."
+                    ans = str(keys)[:1].upper() + str(keys)[1:] + "."
                     NERflag = True
         # if no NER tags found in longSentence, reconstruct it            
         if NERflag == False:
             for chunks in longSentence.noun_chunks:
                 if (str(chunks.root.head) == "of"):
-                    ans = str(chunks.root.head.head).capitalize() + " " + "of " + str(chunks) + " " + strQbody + "."
+                    ans = str(chunks.root.head.head)[:1].upper() + str(chunks.root.head.head)[1:]  + " " + "of " + str(chunks) + " " + strQbody + "."
                 else:
-                    ans = str(chunks).capitalize() + "."
+                    ans = str(chunks)[:1].upper() + str(chunks)[1:] + "."
 
     return ans
 
@@ -151,14 +140,8 @@ def person_ans(Q,text):
     strQbody = reconstructQ(Q)
     strText = str(text).capitalize()
     rooti = 0
-    ans = strText
-    # default ans:
-    # if no correct NER tags found in text, reconstruct it            
-    # for chunks in text.noun_chunks:
-    #     if (str(chunks.root.head) == "of"):
-    #         ans = str(chunks.root.head.head).capitalize() + " " + "of " + str(chunks) + " " + strQbody + "....."
-    #     else:
-    #         ans = str(chunks) + "...."
+    # default ans
+    ans = str(text)[:1].upper() + str(text)[1:]
 
     ent_dict = dict()
     ent_person_dict = dict()
@@ -179,7 +162,7 @@ def person_ans(Q,text):
             if key == k:
                 ent_q_person.append(key)
 
-    # default: find ans with the closest distance from text root
+    # default NER: find ans with the closest distance from text root
     Qroot = "".join(str(token) for token in Q if token.dep_ == "ROOT")
 
     lst = strText.split()
@@ -198,17 +181,22 @@ def person_ans(Q,text):
             if token in ent:
                 ent_distance[ent] = distance[token]
     if (len(ent_distance) != 0):
-        ans = str(min(ent_distance, key=ent_distance.get)).capitalize() + "."
+        ans = str(min(ent_distance, key=ent_distance.get))[:1].upper() + str(min(ent_distance, key=ent_distance.get))[1:] + "."
 
+    # go for the NER with person tags
+    for key in ent_person_dict.keys():
+        ans = str(key)[:1].upper() + str(key)[1:] + "."
+        
+#     print(ent_person_dict)
     for key in ent_person_dict.keys():
         for keys in ent_q_person:
             for chunks in text.noun_chunks:
-                # if the phrase with correct NER tag is also the subject of the sentence, find the ans
+                # if the phrase with correct NER tag is also the subject of the sentence, get the ans
                 if ((str(chunks.root.dep_) == "nsubj" or str(chunks.root.dep_) == "nsubjpass") and str(chunks.root) in str(key)):
-                    ans = str(chunks).capitalize() + "."
+                    ans = str(chunks)[:1].upper() + str(chunks)[1:] + "."
                 # if none of the phrase with correct NER tag is subject, find the one with novelty
                 elif (str(chunks.root) not in str(keys) and str(chunks.root) in key):
-                    ans = str(chunks).capitalize() + "."
+                    ans = str(chunks)[:1].upper() + str(chunks)[1:] + "."
     
     return ans
 
@@ -224,20 +212,22 @@ def binary_ans(strText):
 
 def time_ans(Q,text):
     # TIME/QUANTITY Ans type
-    strText = str(text).capitalize()
-    ans = strText
+    strText = str(text)
+    ans = str(text)[:1].upper() + str(text)[1:]
     # dict to store NER tags of the text
     ent_dict = dict()
     for X in text.ents:
         ent_dict[X.text] = X.label_
     for k,v in ent_dict.items():
         if (v == "DATE" or v == "CARDINAL" or v == "TIME" or v == "QUANTITY"):
-            ans = str(k).capitalize() + "."
+            ans = str(k)[:1].upper() + str(k)[1:] + "."
     
     return ans
+    
 
 def loc_ans(Q,text):
-    ans = str(text).capitalize()
+    # default ans
+    ans = str(text)[:1].upper() + str(text)[1:]
     ent_dict_q = dict()
     for X in Q.ents:
         ent_dict_q[X.text] = X.label_
@@ -251,7 +241,7 @@ def loc_ans(Q,text):
         if len(ent_dict_text) > 1:
             for key in ent_dict_text:
                 if key not in ent_dict_q:
-                    ans = key
+                    ans = str(key)[:1].upper() + str(key)[1:] + "."
                     
     return ans
 
