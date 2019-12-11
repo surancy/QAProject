@@ -22,7 +22,7 @@ A shuffled list of questions with length equal to required number of questions.
 
 #### Questioning pipeline
 
-![q1]https://github.com/surancy/QAProject/blob/master/pipeline/q1.png
+![qpipe]https://github.com/surancy/QAProject/blob/master/pipeline/q1.png
 
 ##### breaking down
 
